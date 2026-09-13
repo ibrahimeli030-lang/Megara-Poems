@@ -1,0 +1,395 @@
+/* ==========================================================
+   Megara — Poem Generator
+   Faithful to the SheCodes original design
+   ========================================================== */
+
+:root {
+  --bg: #f6f4fb;
+  --card: #ffffff;
+  --ink: #272044;
+  --ink-soft: #5c5470;
+  --muted: #9a94ab;
+  --purple: #885df1;
+  --purple-light: #c4b5fd;
+  --purple-border: #ebe6f7;
+  --error: #d64570;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 55px 20px 80px;
+}
+
+/* ---------- Header ---------- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 45px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+h1 {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 5vw, 3.15rem);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  line-height: 1.15;
+}
+
+.tagline {
+  margin-top: 14px;
+  color: var(--ink-soft);
+  font-size: 1.08rem;
+}
+
+.heart {
+  color: var(--purple);
+}
+.brand {
+  color: var(--purple);
+  font-weight: 600;
+}
+
+/* Logo — four tilted rounded squares, like the original */
+.logo {
+  text-align: center;
+}
+.logo-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 22px);
+  gap: 4px;
+  transform: rotate(-10deg);
+  margin: 6px auto 10px;
+  width: fit-content;
+}
+.tile {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  display: block;
+}
+.tile.pink {
+  background: #f472b6;
+}
+.tile.purple {
+  background: #a78bfa;
+}
+.tile.teal {
+  background: #2dd4bf;
+}
+.tile.yellow {
+  background: #fbbf24;
+}
+.logo-name {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* ---------- Card (form) ---------- */
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 38px 40px 32px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 24px rgba(84, 60, 150, 0.07);
+}
+
+.form-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+#topic-input {
+  flex: 1;
+  min-width: 0;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  padding: 17px 28px;
+  font-family: inherit;
+  font-size: 1.08rem;
+  color: var(--ink);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+#topic-input::placeholder {
+  color: var(--muted);
+}
+#topic-input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 4px rgba(136, 93, 241, 0.14);
+}
+#topic-input.invalid {
+  border-color: var(--error);
+  box-shadow: 0 0 0 4px rgba(214, 69, 112, 0.12);
+}
+
+.generate-btn {
+  border: none;
+  background: var(--purple-light);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 17px 36px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+.generate-btn:hover:not(:disabled) {
+  background: var(--purple);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(136, 93, 241, 0.35);
+}
+.generate-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.btn-spinner {
+  display: none;
+  width: 17px;
+  height: 17px;
+  margin-left: 9px;
+  border: 2.5px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.generate-btn.loading .btn-spinner {
+  display: inline-block;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hint {
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-style: italic;
+}
+
+.error {
+  margin-top: 10px;
+  color: var(--error);
+  font-size: 0.93rem;
+  font-weight: 600;
+}
+
+/* ---------- Output card ---------- */
+.output-card {
+  background: var(--card);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(84, 60, 150, 0.07);
+  overflow: hidden;
+}
+
+.output-inner {
+  padding: 36px 40px;
+  border-left: 4px solid var(--purple);
+  min-height: 60px;
+}
+
+.placeholder {
+  border-left-color: transparent;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink-soft);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.hourglass {
+  font-size: 1.15rem;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.result {
+  animation: fadeUp 0.35s ease;
+}
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.badge {
+  display: inline-block;
+  background: #f3efff;
+  color: var(--purple);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  border-radius: 999px;
+  padding: 4px 14px;
+  margin-bottom: 14px;
+}
+
+.poem-text {
+  white-space: pre-wrap;
+  font-size: 1.07rem;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.poem-text .caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  background: var(--purple);
+  vertical-align: text-bottom;
+  animation: blink 0.8s step-end infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.ghost-btn {
+  border: 1.5px solid var(--purple-border);
+  background: #fff;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.ghost-btn:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+}
+
+/* ---------- Footer / GitHub ---------- */
+.footer {
+  text-align: center;
+  margin-top: 38px;
+}
+
+.github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1.5px solid var(--purple-border);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 9px 22px;
+  transition: all 0.18s ease;
+}
+.github-btn:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(136, 93, 241, 0.16);
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(90px);
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.92rem;
+  padding: 11px 26px;
+  border-radius: 999px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .container {
+    padding: 36px 14px 60px;
+  }
+  .card {
+    padding: 26px 20px 22px;
+  }
+  .output-inner {
+    padding: 28px 22px;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+  .generate-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .header {
+    margin-bottom: 32px;
+  }
+  .logo-name {
+    font-size: 1.25rem;
+  }
+}
