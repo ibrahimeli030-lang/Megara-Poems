@@ -3,119 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Megara — AI Poem Generator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <base target="_blank" />
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="src/style.css" />
+    <title>AI French Poem Generator</title>
   </head>
   <body>
     <div class="container">
-      <!-- ===== Header ===== -->
-      <header class="header">
-        <div>
-          <h1>Poem Generator</h1>
-          <p class="tagline">
-            Coded with <span class="heart">💜</span> by
-            <a
-              class="brand"
-              href="https://github.com/ibrahimeli030-lang/FRench-poems"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Megara</a
-            >, your creative AI companion.
-          </p>
-        </div>
-
-        <div class="logo" aria-label="Megara">
-          <div class="logo-tiles">
-            <span class="tile pink"></span>
-            <span class="tile purple"></span>
-            <span class="tile teal"></span>
-            <span class="tile yellow"></span>
-          </div>
-          <span class="logo-name">Megara</span>
-        </div>
+      <header>
+        <h1>AI French Poem Generator</h1>
       </header>
 
-      <!-- ===== Generator form ===== -->
       <main>
-        <section class="card">
-          <form id="generator-form" novalidate>
-            <div class="form-row">
-              <input
-                type="text"
-                id="topic-input"
-                placeholder="Enter the topic of the poem?"
-                maxlength="120"
-                autocomplete="off"
-                aria-label="Topic of the poem"
-              />
-              <button type="submit" id="generate-btn" class="generate-btn">
-                <span class="btn-label">Generate Poem</span>
-                <span class="btn-spinner" aria-hidden="true"></span>
-              </button>
-            </div>
-            <p class="hint">i.e. Flower, Paris or Cheese</p>
-            <p class="error" id="error-msg" hidden></p>
+        <div class="form-container">
+          <form id="poem-generator-form">
+            <input
+              type="text"
+              placeholder="Enter the topic of a French poem"
+              autofocus
+              required
+              autocomplete="off"
+              class="instructions"
+              id="user-instructions"
+            />
+            <input type="submit" class="submit-button" />
           </form>
-        </section>
-
-        <!-- ===== Output ===== -->
-        <section class="output-card" aria-live="polite">
-          <div id="output-placeholder" class="output-inner placeholder">
-            <p>Your poem will appear here…</p>
-          </div>
-
-          <div id="output-loading" class="output-inner loading" hidden>
-            <span class="hourglass" aria-hidden="true">⏳</span>
-            <span id="loading-text">Generating a poem about love..</span>
-          </div>
-
-          <div id="output-result" class="output-inner result" hidden>
-            <p class="badge">Poem</p>
-            <div id="output-text" class="poem-text"></div>
-            <div class="actions">
-              <button type="button" id="copy-btn" class="ghost-btn">
-                📋 Copy
-              </button>
-              <button type="button" id="regenerate-btn" class="ghost-btn">
-                🔁 Another one
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== Footer ===== -->
-        <footer class="footer">
-          <a
-            class="github-btn"
-            href="https://github.com/ibrahimeli030-lang/FRench-poems"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg
-              viewBox="0 0 16 16"
-              width="15"
-              height="15"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-              />
-            </svg>
-            View on GitHub
-          </a>
-        </footer>
+          <div class="hint">i.e: Flower, Paris or Cheese</div>
+        </div>
+        <div class="poem hidden" id="poem"></div>
       </main>
+
+      <footer>
+        This AI project was coded by
+        <a href="https://github.com/ibrahimeli030-lang" target="_blank"
+          >Ojochide Ibrahim</a
+        >
+        and is
+        <a
+          href="https://ibrahimeli030-lang.github.io/Megara-Poems/"
+          target="_blank"
+        >
+          open-sourced on GitHub</a
+        >
+      </footer>
     </div>
 
-    <div class="toast" id="toast" role="status"></div>
-    <script src="script.js"></script>
+    <script src="src/index.js"></script>
   </body>
 </html>
